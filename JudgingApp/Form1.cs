@@ -17,7 +17,7 @@ namespace JudgingApp
         private string[] teamNames;  // 팀명을 저장할 배열
         private string resultFile = "result.xlsx";  // 이전 점수가 저장된 엑셀 파일 경로
         private string teamFile = "teams.xlsx";  // 이전 점수가 저장된 엑셀 파일 경로
-        private string[] evaluationItems = { "창의성", "준비성", "활동성", "팀웍", "발표력" };  // 평가 항목
+        private string[] evaluationItems = { "창의성", "준비성", "활동성", "팀웍", "발표력", "합계" };  // 평가 항목
         private string teamsFilePath;
         private string resultFilePath;  // 이전 점수가 저장된 엑셀 파일 경로
 
@@ -32,6 +32,7 @@ namespace JudgingApp
             label3.Text = evaluationItems[2];
             label4.Text = evaluationItems[3];
             label5.Text = evaluationItems[4];
+            label6.Text = evaluationItems[5];
         }
 
         // 엑셀 파일에서 팀명 불러오기
@@ -92,6 +93,7 @@ namespace JudgingApp
                             txtScore3.Text = worksheet.Cells[row, 4].Text;  // 활동성
                             txtScore4.Text = worksheet.Cells[row, 5].Text;  // 팀웍
                             txtScore5.Text = worksheet.Cells[row, 6].Text;  // 발표력
+                            txtSum.Text = worksheet.Cells[row, 7].Text;  // 합계
                             return;
                         }
                     }
@@ -103,6 +105,7 @@ namespace JudgingApp
                     txtScore3.Text = "0";  // 활동성
                     txtScore4.Text = "0";  // 팀웍
                     txtScore5.Text = "0";  // 발표력
+                    txtSum.Text = "0";  // 합계
                 }
             }
             else
@@ -199,11 +202,12 @@ namespace JudgingApp
 
                     // 제목 추가
                     worksheet.Cells[1, 1].Value = "팀명";
-                    worksheet.Cells[1, 2].Value = "창의성";
-                    worksheet.Cells[1, 3].Value = "준비성";
-                    worksheet.Cells[1, 4].Value = "활동성";
-                    worksheet.Cells[1, 5].Value = "팀웍";
-                    worksheet.Cells[1, 6].Value = "발표력";
+                    worksheet.Cells[1, 2].Value = evaluationItems[0]; //"창의성";
+                    worksheet.Cells[1, 3].Value = evaluationItems[1]; //"준비성";
+                    worksheet.Cells[1, 4].Value = evaluationItems[2]; //"활동성";
+                    worksheet.Cells[1, 5].Value = evaluationItems[3]; //"팀웍";
+                    worksheet.Cells[1, 6].Value = evaluationItems[4]; //"발표력";
+                    worksheet.Cells[1, 7].Value = evaluationItems[5]; // "합계";
                 }
 
                 // 팀명 가져오기
@@ -229,6 +233,7 @@ namespace JudgingApp
                     worksheet.Cells[existingRow, 4].Value = txtScore3.Text;  // 활동성
                     worksheet.Cells[existingRow, 5].Value = txtScore4.Text;  // 팀웍
                     worksheet.Cells[existingRow, 6].Value = txtScore5.Text;  // 발표력
+                    worksheet.Cells[existingRow, 7].Value = txtSum.Text;  //  합계
                 }
                 else
                 {
@@ -240,6 +245,7 @@ namespace JudgingApp
                     worksheet.Cells[startRow, 4].Value = txtScore3.Text;  // 활동성
                     worksheet.Cells[startRow, 5].Value = txtScore4.Text;  // 팀웍
                     worksheet.Cells[startRow, 6].Value = txtScore5.Text;  // 발표력
+                    worksheet.Cells[startRow, 7].Value = txtSum.Text;  // 합계
                 }
 
                 package.SaveAs(new FileInfo(resultFilePath));  // 바탕화면에 파일로 저장
@@ -272,7 +278,7 @@ namespace JudgingApp
         private void SumScore()
         {
             int iTotal = int.Parse(txtScore1.Text) + int.Parse(txtScore2.Text) + int.Parse(txtScore3.Text) + int.Parse(txtScore4.Text) + int.Parse(txtScore5.Text);
-            txtScore1.Text = iTotal.ToString();
+            txtSum.Text = iTotal.ToString();
         }
     }
 }
