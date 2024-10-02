@@ -1,13 +1,6 @@
 ﻿using OfficeOpenXml;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace JudgingApp
@@ -41,6 +34,9 @@ namespace JudgingApp
             // 팀명을 저장한 엑셀 파일 경로
             string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             teamsFilePath = Path.Combine(desktopPath, teamFile);
+            //string currentDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            //teamsFilePath = Path.Combine(currentDirectory, teamFile);
+            //MessageBox.Show(teamsFilePath);
 
 
             // 엑셀 파일에서 팀명 읽어오기
@@ -75,6 +71,9 @@ namespace JudgingApp
             // 바탕화면 경로 설정
             string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             resultFilePath = Path.Combine(desktopPath, resultFile);  // 바탕화면에 "result.xlsx" 파일로 저장
+
+            //string currentDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            //resultFilePath = Path.Combine(currentDirectory, resultFile);  // 바탕화면에 "result.xlsx" 파일로 저장
 
             if (File.Exists(resultFilePath))
             {
@@ -114,66 +113,6 @@ namespace JudgingApp
             }
         }
 
-        /*private void btnSave_Click(object sender, EventArgs e)
-        {
-            // 선택된 팀
-            string selectedTeam = lstTeams.SelectedItem?.ToString();
-            if (string.IsNullOrEmpty(selectedTeam))
-            {
-                MessageBox.Show("팀을 선택해주세요.");
-                return;
-            }
-
-            // 5개의 항목에 대한 점수 입력
-            int[] scores = new int[5];
-            try
-            {
-                scores[0] = int.Parse(txtScore1.Text);  // 창의성
-                scores[1] = int.Parse(txtScore2.Text);  // 준비성
-                scores[2] = int.Parse(txtScore3.Text);  // 활동성
-                scores[3] = int.Parse(txtScore4.Text);  // 팀웍
-                scores[4] = int.Parse(txtScore5.Text);  // 발표력
-            }
-            catch (FormatException)
-            {
-                MessageBox.Show("모든 점수 입력란에 숫자를 입력해주세요.");
-                return;
-            }
-
-            // 엑셀 파일로 저장
-            SaveFileDialog saveFileDialog = new SaveFileDialog
-            {
-                Filter = "Excel 파일 (*.xlsx)|*.xlsx",
-                FileName = "심사 결과.xlsx"
-            };
-
-            if (saveFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                using (ExcelPackage package = new ExcelPackage())
-                {
-                    ExcelWorksheet worksheet = package.Workbook.Worksheets.Add("심사 결과");
-
-                    // 제목 행 추가
-                    worksheet.Cells[1, 1].Value = "팀명";
-                    worksheet.Cells[1, 2].Value = "항목";
-                    worksheet.Cells[1, 3].Value = "점수";
-
-                    // 선택된 팀과 각 항목의 점수 추가
-                    for (int i = 0; i < 5; i++)
-                    {
-                        worksheet.Cells[i + 2, 1].Value = selectedTeam;  // 팀명
-                        worksheet.Cells[i + 2, 2].Value = evaluationItems[i];  // 평가 항목
-                        worksheet.Cells[i + 2, 3].Value = scores[i];  // 점수
-                    }
-
-                    // 파일 저장
-                    FileInfo fileInfo = new FileInfo(saveFileDialog.FileName);
-                    package.SaveAs(fileInfo);
-                }
-
-                MessageBox.Show("엑셀 파일로 저장되었습니다.");
-            }
-        }*/
 
         private void btnSave_Click(object sender, EventArgs e)
         {
@@ -181,6 +120,9 @@ namespace JudgingApp
             // 바탕화면 경로 설정
             string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             resultFilePath = Path.Combine(desktopPath, resultFile);  // 바탕화면에 "result.xlsx" 파일로 저장
+
+            //string currentDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            //resultFilePath = Path.Combine(currentDirectory, resultFile);  // 바탕화면에 "result.xlsx" 파일로 저장
 
             using (ExcelPackage package = new ExcelPackage())
             {
