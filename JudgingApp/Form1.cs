@@ -26,6 +26,13 @@ namespace JudgingApp
             label4.Text = evaluationItems[3];
             label5.Text = evaluationItems[4];
             label6.Text = evaluationItems[5];
+
+            // 점수 변경 시 유효성 검사를 잠시 비활성화
+            txtScore1.Validating -= ScoreTextBox_Validating;
+            txtScore2.Validating -= ScoreTextBox_Validating;
+            txtScore3.Validating -= ScoreTextBox_Validating;
+            txtScore4.Validating -= ScoreTextBox_Validating;
+            txtScore5.Validating -= ScoreTextBox_Validating;
         }
 
         // 엑셀 파일에서 팀명 불러오기
@@ -116,7 +123,7 @@ namespace JudgingApp
          
         private void btnSave_Click(object sender, EventArgs e)
         {
-            SumScore();
+//            SumScore();
             // 바탕화면 경로 설정
             string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             resultFilePath = Path.Combine(desktopPath, resultFile);  // 바탕화면에 "result.xlsx" 파일로 저장
@@ -201,7 +208,16 @@ namespace JudgingApp
             string selectedTeam = lstTeams.SelectedItem?.ToString();
             if (!string.IsNullOrEmpty(selectedTeam))
             {
+                
+
                 LoadPreviousScores(selectedTeam);  // 선택된 팀의 이전 점수를 불러옴
+
+                // 유효성 검사를 다시 활성화
+                txtScore1.Validating += ScoreTextBox_Validating;
+                txtScore2.Validating += ScoreTextBox_Validating;
+                txtScore3.Validating += ScoreTextBox_Validating;
+                txtScore4.Validating += ScoreTextBox_Validating;
+                txtScore5.Validating += ScoreTextBox_Validating;
             }
         }
 
@@ -219,8 +235,51 @@ namespace JudgingApp
 
         private void SumScore()
         {
-            int iTotal = int.Parse(txtScore1.Text) + int.Parse(txtScore2.Text) + int.Parse(txtScore3.Text) + int.Parse(txtScore4.Text) + int.Parse(txtScore5.Text);
-            txtSum.Text = iTotal.ToString();
+            int iTotal = 0;
+
+            // 각 점수는 항상 유효한 범위 내에서 입력되므로 바로 합산 가능
+            if (int.TryParse(txtScore1.Text, out int score1)) iTotal += score1;
+            if (int.TryParse(txtScore2.Text, out int score2)) iTotal += score2;
+            if (int.TryParse(txtScore3.Text, out int score3)) iTotal += score3;
+            if (int.TryParse(txtScore4.Text, out int score4)) iTotal += score4;
+            if (int.TryParse(txtScore5.Text, out int score5)) iTotal += score5;
+
+            txtSum.Text = iTotal.ToString();  // 합계 출력
+        }
+
+        private void ScoreTextBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsDigit(e.KeyChar) && e.KeyChar != (char)Keys.Back)
+            {
+                e.Handled = true;  // 숫자가 아니면 입력을 무시
+            }
+        }
+
+        private void ScoreTextBox_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            TextBox textBox = sender as TextBox;
+
+            if (int.TryParse(textBox.Text, out int score))
+            {
+                if (score < 0 || score > 20)
+                {
+                    MessageBox.Show("점수는 0에서 20 사이여야 합니다.");
+                    textBox.Text = "0";  // 잘못된 값은 0으로 초기화
+                    e.Cancel = true;  // 포커스를 다시 입력 상자에 둠
+                }
+            }
+            else
+            {
+                // 숫자가 아닌 값이 입력된 경우
+                MessageBox.Show("유효한 숫자를 입력하세요.");
+                textBox.Text = "0";  // 잘못된 값은 0으로 초기화
+                e.Cancel = true;
+            }
+        }
+
+        private void ScoreTextBox_TextChanged(object sender, EventArgs e)
+        {
+            SumScore();  // 점수가 변경될 때마다 합계 계산
         }
     }
 }
